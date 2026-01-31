@@ -1,4 +1,4 @@
-package com.example.remedialucp2_032
+package com.example.remedialucp2_032.view
 
 import android.os.Bundle
 import android.widget.EditText
@@ -8,7 +8,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.remedialucp2_032.view.BukuAdapter
+import com.example.remedialucp2_032.R
 import com.example.remedialucp2_032.viewmodel.MainViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
