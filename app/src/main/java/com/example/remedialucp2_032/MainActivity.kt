@@ -1,47 +1,49 @@
 package com.example.remedialucp2_032
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.remedialucp2_032.ui.theme.RemedialUCP2_032Theme
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.remedialucp2_032.view.BukuAdapter
+import com.example.remedialucp2_032.viewmodel.MainViewModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var viewModel: MainViewModel
+    private lateinit var adapter: BukuAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            RemedialUCP2_032Theme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+
+        setContentView(R.layout.activity_main)
+
+        val rvBuku = findViewById<RecyclerView>(R.id.rvBuku)
+        adapter = BukuAdapter()
+        rvBuku.adapter = adapter
+        rvBuku.layoutManager = LinearLayoutManager(this)
+
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+
+        viewModel.semuaBuku.observe(this) { listBuku ->
+            adapter.setData(listBuku)
+        }
+
+        val fab = findViewById<FloatingActionButton>(R.id.fabTambah)
+        fab.setOnClickListener {
+            viewModel.tambahBukuContoh()
+            Toast.makeText(this, "Buku contoh berhasil ditambahkan!", Toast.LENGTH_SHORT).show()
+        }
+
+        val etSearch = findViewById<EditText>(R.id.etSearch)
+        etSearch.addTextChangedListener { text ->
+            viewModel.cariBuku(text.toString()).observe(this) { hasilCari ->
+                adapter.setData(hasilCari)
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    RemedialUCP2_032Theme {
-        Greeting("Android")
     }
 }
